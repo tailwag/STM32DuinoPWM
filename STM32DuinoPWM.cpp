@@ -223,16 +223,6 @@ void InputPWM::end() {
   initialized = false;
 }
 
-//void InputPWM::captureCallback(void *arg) {
-//  auto *self = static_cast<InputPWM *>(arg);
-//  uint32_t capture = self->halTimer->getCaptureCompare(self->channel);
-//
-//  // TODO: compute period/pulse widths
-//  
-//  self->lastPeriod = capture;
-//  self->lastPulse  = capture / 2;
-//}
-//
 float InputPWM::getFrequency() {
   if (period == 0 || !halTimer) return 0.0f;
 
