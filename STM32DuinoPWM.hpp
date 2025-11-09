@@ -1,8 +1,6 @@
 #include "HardwareTimer.h"
 #include "stm32g474xx.h"
 #include <Arduino.h>
-#include <cstdint>
-#include <sys/types.h>
 
 enum PwmRange {
   LOWFREQ, 
