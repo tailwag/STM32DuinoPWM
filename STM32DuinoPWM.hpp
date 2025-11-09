@@ -1,6 +1,8 @@
 #include "HardwareTimer.h"
 #include "stm32g474xx.h"
 #include <Arduino.h>
+#include <cstdint>
+#include <sys/types.h>
 
 enum PwmRange {
   LOWFREQ, 
@@ -26,6 +28,7 @@ class STM32HALPWM {
     HardwareTimer *halTimer;
     uint8_t pwmPin;
     uint8_t channel;
+    int8_t  outputId;
     bool initialized;
 
   public:
@@ -36,7 +39,8 @@ class STM32HALPWM {
     virtual void   end() = 0;
 
     TIM_TypeDef *getTimerInstance() const;
-    uint8_t getChannel() const;
+    uint8_t getChannel()  const { return channel;  }
+    uint8_t getOutputID() const { return outputId; }
 
 };
 
@@ -54,10 +58,14 @@ class OutputPWM : public STM32HALPWM {
     void begin() override;
     void   end() override;
 
-    void setFrequency(uint32_t freq);
-    void setDutyCycle(float duty);
     void enable();
     void disable();
+
+    void setFrequency(uint32_t freq);
+    void setDutyCycle(float duty);
+
+    float getFrequency() const { return static_cast<float>(frequency); }
+    float getDutyCycle() const { return dutyCycle; }
 };
 
 /*  ---------------------------  *

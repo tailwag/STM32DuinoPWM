@@ -1,4 +1,5 @@
 #include "STM32DuinoPWM.hpp"
+#include <cstdint>
 
 static InputPWM *inputInstances[16] = {nullptr};
 
@@ -57,6 +58,15 @@ PinTimerMap timerMap[] = {
   #endif
 };
 
+int8_t getTimerChannelID(uint8_t pin) {
+  uint8_t id = 0;
+  for (auto &m : timerMap) {
+    if (m.pin == pin) return id;
+    ++id;
+  }
+  return -1;
+}
+
 TIM_TypeDef * getTimerForPin(uint8_t pin) {
     for (auto &m : timerMap) {
         if (m.pin == pin) return m.timer; 
@@ -79,6 +89,7 @@ STM32HALPWM::STM32HALPWM(uint8_t pin)
 
   TIM_TypeDef *timer = getTimerForPin(pin);
   channel = getChannelForPin(pin);
+  outputId = getTimerChannelID(pin);
   if (timer)
     halTimer = new HardwareTimer(timer);
 }
@@ -94,11 +105,6 @@ TIM_TypeDef *STM32HALPWM::getTimerInstance() const {
   return halTimer ? halTimer->getHandle()->Instance : nullptr;
 }
 
-uint8_t STM32HALPWM::getChannel() const {
-  return channel;
-}
-
-
 /*  ---------------------------  *
  *  -- PWM GENERATOR CLASS   --  *
  *  ---------------------------  */
@@ -106,15 +112,10 @@ OutputPWM::OutputPWM(uint8_t pin, uint32_t freq, float dutyCycle)
   : STM32HALPWM(pin), frequency(freq), dutyCycle(dutyCycle) {}
 
 void OutputPWM::begin() {
-  Serial.println("output begin called");
   halTimer->setMode(channel, TIMER_OUTPUT_COMPARE_PWM1, pwmPin);
-  Serial.println("setmode success");
   halTimer->setOverflow(frequency, HERTZ_FORMAT);
-  Serial.println("set freq success");
   halTimer->setCaptureCompare(channel, 0, PERCENT_COMPARE_FORMAT);
-  Serial.println("set dc success");
   halTimer->resume(); 
-  Serial.println("resume success");
   initialized = true;
 }
 
@@ -151,7 +152,7 @@ void OutputPWM::disable() {
  *  ---------------------------  */
 InputPWM::InputPWM(uint8_t pin, PwmRange range) : STM32HALPWM(pin) {
   if (range == LOW) 
-    prescalerValue = 30;
+    prescalerValue = 40;
   else 
     prescalerValue = 1;
 
@@ -190,12 +191,12 @@ void InputPWM::begin() {
   if (!halTimer) return;
 
   // register instance in lookup array
-  if (channel < 16) inputInstances[channel] = this;
+  if (outputId < 16) inputInstances[outputId] = this;
 
   halTimer->setMode(channel, TIMER_INPUT_CAPTURE_BOTHEDGE, pwmPin);
   halTimer->setPrescaleFactor(prescalerValue); 
 
-  switch (channel) {
+  switch (outputId) {
     case  0: halTimer->attachInterrupt( 0,  captureWrapper0); break; 
     case  1: halTimer->attachInterrupt( 1,  captureWrapper1); break; 
     case  2: halTimer->attachInterrupt( 2,  captureWrapper2); break; 
