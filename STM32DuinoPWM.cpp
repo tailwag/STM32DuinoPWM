@@ -154,12 +154,7 @@ void InputPWM::begin() {
   if (!halTimer) return;
 
   // register instance in lookup array
-  Serial.print("outputId: "); 
-  Serial.println(outputId);
   if (outputId < 16) inputInstances[outputId] = this;
-
-  Serial.print("assignment test : ");
-  Serial.print(inputInstances[outputId]->outputId);
 
   halTimer->setMode(channel, TIMER_INPUT_CAPTURE_BOTHEDGE, pwmPin);
   halTimer->setPrescaleFactor(prescalerValue); 
