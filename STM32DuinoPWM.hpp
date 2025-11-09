@@ -1,4 +1,4 @@
-#include "HardwareTimer.h"
+#include "STM32DuinoPWM_PinDefs.hpp"
 #include "stm32g474xx.h"
 #include <Arduino.h>
 #include <cstdint>
@@ -8,14 +8,6 @@ enum PwmRange {
   LOWFREQ, 
   HIGHFREQ,
 };
-
-struct PinTimerMap {
-    uint8_t pin;
-    TIM_TypeDef *timer;
-    uint8_t channel;
-};
-
-extern PinTimerMap timerMap[];
 
 TIM_TypeDef *getTimerForPin(uint8_t pin);
 int8_t getChannelForPin(int8_t pin);
