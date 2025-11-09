@@ -1,24 +1,26 @@
 #include "STM32DuinoPWM.hpp"
+#include "WSerial.h"
 #include <cstdint>
 
-static InputPWM *inputInstances[16] = {nullptr};
+static InputPWM *inputInstances[32] = {nullptr};
 
-static void captureWrapper0()  { if (inputInstances[0])   inputInstances[0]->handleCapture(); }
-static void captureWrapper1()  { if (inputInstances[1])   inputInstances[1]->handleCapture(); }
-static void captureWrapper2()  { if (inputInstances[2])   inputInstances[2]->handleCapture(); }
-static void captureWrapper3()  { if (inputInstances[3])   inputInstances[3]->handleCapture(); }
-static void captureWrapper4()  { if (inputInstances[4])   inputInstances[4]->handleCapture(); }
-static void captureWrapper5()  { if (inputInstances[5])   inputInstances[5]->handleCapture(); }
-static void captureWrapper6()  { if (inputInstances[6])   inputInstances[6]->handleCapture(); }
-static void captureWrapper7()  { if (inputInstances[7])   inputInstances[7]->handleCapture(); }
-static void captureWrapper8()  { if (inputInstances[8])   inputInstances[8]->handleCapture(); }
-static void captureWrapper9()  { if (inputInstances[9])   inputInstances[9]->handleCapture(); }
-static void captureWrapper10() { if (inputInstances[10]) inputInstances[10]->handleCapture(); }
-static void captureWrapper11() { if (inputInstances[11]) inputInstances[11]->handleCapture(); }
-static void captureWrapper12() { if (inputInstances[12]) inputInstances[12]->handleCapture(); }
-static void captureWrapper13() { if (inputInstances[13]) inputInstances[13]->handleCapture(); }
-static void captureWrapper14() { if (inputInstances[14]) inputInstances[14]->handleCapture(); }
-static void captureWrapper15() { if (inputInstances[15]) inputInstances[15]->handleCapture(); }
+template <int8_t N>
+void captureWrapper() {
+  if (inputInstances[N])
+    inputInstances[N]->handleCapture();
+}
+
+using CaptureFunc = void(*)(); 
+
+static const CaptureFunc captureWrappers[32] = {
+  captureWrapper<0>, captureWrapper<1>, captureWrapper<2>, captureWrapper<3>, captureWrapper<4>, 
+  captureWrapper<5>, captureWrapper<6>, captureWrapper<7>, captureWrapper<8>, captureWrapper<9>,
+  captureWrapper<10>, captureWrapper<11>, captureWrapper<12>, captureWrapper<13>, captureWrapper<14>,
+  captureWrapper<15>, captureWrapper<16>, captureWrapper<17>, captureWrapper<18>, captureWrapper<19>,
+  captureWrapper<20>, captureWrapper<21>, captureWrapper<22>, captureWrapper<23>, captureWrapper<24>,
+  captureWrapper<25>, captureWrapper<26>, captureWrapper<27>, captureWrapper<28>, captureWrapper<29>,
+  captureWrapper<30>, captureWrapper<31>
+};
 
 PinTimerMap timerMap[] = {
   //#ifdef F401RE
@@ -57,16 +59,6 @@ PinTimerMap timerMap[] = {
     {PB9,  TIM4, 4}, // R05, D14
   #endif
 };
-
-int8_t getTimerChannelID(uint8_t pin) {
-  uint8_t id = 0;
-  for (auto &m : timerMap) {
-    if (m.pin == pin) return id;
-    ++id;
-  }
-  return -1;
-}
-
 TIM_TypeDef * getTimerForPin(uint8_t pin) {
     for (auto &m : timerMap) {
         if (m.pin == pin) return m.timer; 
@@ -74,11 +66,20 @@ TIM_TypeDef * getTimerForPin(uint8_t pin) {
     return nullptr; // not found
 }
 
-int getChannelForPin(uint8_t pin) {
+int8_t getChannelForPin(uint8_t pin) {
     for (auto &m : timerMap) {
         if (m.pin == pin) return m.channel; 
     }
     return -1;
+}
+
+int8_t getOutputIdForPin(uint8_t pin) {
+  int8_t id = 0;
+  for (auto &m : timerMap) {
+    if (m.pin == pin) return id;
+    ++id;
+  }
+  return -1;
 }
 
 /*  ---------------------------  *
@@ -88,8 +89,8 @@ STM32HALPWM::STM32HALPWM(uint8_t pin)
   : halTimer(nullptr), pwmPin(pin), channel(0), initialized(false) {
 
   TIM_TypeDef *timer = getTimerForPin(pin);
-  channel = getChannelForPin(pin);
-  outputId = getTimerChannelID(pin);
+  channel  = getChannelForPin(pin);
+  outputId = getOutputIdForPin(pin);
   if (timer)
     halTimer = new HardwareTimer(timer);
 }
@@ -104,6 +105,7 @@ STM32HALPWM::~STM32HALPWM() {
 TIM_TypeDef *STM32HALPWM::getTimerInstance() const {
   return halTimer ? halTimer->getHandle()->Instance : nullptr;
 }
+
 
 /*  ---------------------------  *
  *  -- PWM GENERATOR CLASS   --  *
@@ -152,7 +154,7 @@ void OutputPWM::disable() {
  *  ---------------------------  */
 InputPWM::InputPWM(uint8_t pin, PwmRange range) : STM32HALPWM(pin) {
   if (range == LOW) 
-    prescalerValue = 40;
+    prescalerValue = 30;
   else 
     prescalerValue = 1;
 
@@ -191,29 +193,18 @@ void InputPWM::begin() {
   if (!halTimer) return;
 
   // register instance in lookup array
+  Serial.print("outputId: "); 
+  Serial.println(outputId);
   if (outputId < 16) inputInstances[outputId] = this;
+
+  Serial.print("assignment test : ");
+  Serial.print(inputInstances[outputId]->outputId);
 
   halTimer->setMode(channel, TIMER_INPUT_CAPTURE_BOTHEDGE, pwmPin);
   halTimer->setPrescaleFactor(prescalerValue); 
 
-  switch (outputId) {
-    case  0: halTimer->attachInterrupt( 0,  captureWrapper0); break; 
-    case  1: halTimer->attachInterrupt( 1,  captureWrapper1); break; 
-    case  2: halTimer->attachInterrupt( 2,  captureWrapper2); break; 
-    case  3: halTimer->attachInterrupt( 3,  captureWrapper3); break; 
-    case  4: halTimer->attachInterrupt( 4,  captureWrapper4); break; 
-    case  5: halTimer->attachInterrupt( 5,  captureWrapper5); break; 
-    case  6: halTimer->attachInterrupt( 6,  captureWrapper6); break; 
-    case  7: halTimer->attachInterrupt( 7,  captureWrapper7); break; 
-    case  8: halTimer->attachInterrupt( 8,  captureWrapper8); break; 
-    case  9: halTimer->attachInterrupt( 9,  captureWrapper9); break; 
-    case 10: halTimer->attachInterrupt(10, captureWrapper10); break; 
-    case 11: halTimer->attachInterrupt(11, captureWrapper11); break; 
-    case 12: halTimer->attachInterrupt(12, captureWrapper12); break; 
-    case 13: halTimer->attachInterrupt(13, captureWrapper13); break; 
-    case 14: halTimer->attachInterrupt(14, captureWrapper14); break; 
-    case 15: halTimer->attachInterrupt(15, captureWrapper15); break; 
-  }
+  if (outputId < 16)
+    halTimer->attachInterrupt(channel, captureWrappers[outputId]);
   
   halTimer->resume();
   initialized = true;

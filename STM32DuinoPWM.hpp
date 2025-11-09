@@ -18,7 +18,8 @@ struct PinTimerMap {
 extern PinTimerMap timerMap[];
 
 TIM_TypeDef *getTimerForPin(uint8_t pin);
-int getChannelForPin(uint8_t pin);
+int8_t getChannelForPin(int8_t pin);
+int8_t getOutputIdForPin(uint8_t pin);
 
 /*  ---------------------------  *
  *  -- BASE TIMER CLASS      --  *
@@ -27,8 +28,8 @@ class STM32HALPWM {
   protected:
     HardwareTimer *halTimer;
     uint8_t pwmPin;
-    uint8_t channel;
-    int8_t  outputId;
+    int8_t channel;
+    int8_t outputId; 
     bool initialized;
 
   public:
@@ -39,8 +40,7 @@ class STM32HALPWM {
     virtual void   end() = 0;
 
     TIM_TypeDef *getTimerInstance() const;
-    uint8_t getChannel()  const { return channel;  }
-    uint8_t getOutputID() const { return outputId; }
+    uint8_t getChannel() const { return channel; }
 
 };
 
