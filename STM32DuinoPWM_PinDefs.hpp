@@ -52,6 +52,24 @@ static const PinTimerMap timerPinChannels[] = {
     {PB8,  TIM4, 3}, //D15
     {PB9,  TIM4, 4}, //D14
   #endif
+  #ifdef G0B1RE
+    {PA8,  TIM1, 1}, //
+    {PA9,  TIM1, 2}, //
+    {PA10, TIM1, 3}, //
+    {PC11, TIM1, 4}, // 
+    {PA0,  TIM2, 1}, //
+    {PA1,  TIM2, 2}, //
+    {PB10, TIM2, 3}, //
+    {PB11, TIM2, 4}, //
+    {PA6,  TIM3, 1}, //
+    {PA7,  TIM3, 2}, //
+    {PB0,  TIM3, 3}, //
+    {PB1,  TIM3, 4}, //
+    {PB6,  TIM4, 1}, //
+    {PB7,  TIM4, 2}, //
+    {PB8,  TIM4, 3}, //
+    {PB9,  TIM4, 4}, //
+  #endif
   #ifdef G474RE
     {PC0,  TIM1, 1}, // L38, A5
     {PC1,  TIM1, 2}, // L36, A4
@@ -70,5 +88,37 @@ static const PinTimerMap timerPinChannels[] = {
     {PB8,  TIM4, 3}, // R03, D15
     {PB9,  TIM4, 4}, // R05, D14
   #endif
+  #ifdef H753ZI
+    {PE9,  TIM1, 1}, //
+    {PE11, TIM1, 2}, //
+    {PE13, TIM1, 3}, //
+    {PE14, TIM1, 4}, //
+    {PA5,  TIM2, 1}, //
+    {PB3,  TIM2, 2}, //
+    {PB10, TIM2, 3}, //
+    {PB11, TIM2, 4}, //
+    {PA6,  TIM3, 1}, //
+    {PA7,  TIM3, 2}, //
+    {PC8,  TIM3, 3}, //
+    {PB1,  TIM3, 4}, //
+    {PD12, TIM4, 1}, //
+    {PD13, TIM4, 2}, //
+    {PD14, TIM4, 3}, //
+    {PD15, TIM4, 4}, //
+    {PA0,  TIM5, 1}, //
+    {PA1,  TIM5, 2}, //
+    {PA2,  TIM5, 3}, //
+    {PA3,  TIM5, 4}, //
+
+  #endif
+  #if defined(L412KB) || defined(L432KC)
+    {PA8,  TIM1, 1}, //
+    {PA9,  TIM1, 2}, //
+    {PA10, TIM1, 3}, //
+    {PA11, TIM1, 4}, //
+    {PA5,  TIM2, 1}, //
+    {PA1,  TIM2, 2}, //
+    {PA3,  TIM2, 4}, //
+  #endif 
 };
 #endif // !_STM32DUINOPWMPINDEFH
