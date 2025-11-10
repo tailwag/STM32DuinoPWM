@@ -3,6 +3,10 @@
 #include "HardwareTimer.h"
 #include <Arduino.h>
 
+#ifdef F303K8
+#include "stm32f303xx.h"
+#endif 
+
 #ifdef F401RE
 #include "stm32f401xx.h"
 #endif 
@@ -35,6 +39,19 @@ struct PinTimerMap {
 };
 
 static const PinTimerMap timerPinChannels[] = {
+  #ifdef F303K8
+    {PA8,  TIM1, 1}, // L12, D9
+    {PA10, TIM1, 3}, // L02, D0
+    {PA11, TIM1, 4}, // L13, D10
+    {PA0,  TIM2, 1}, // R12, A0
+    {PA1,  TIM2, 2}, // R11, A1
+    {PA9,  TIM2, 3}, // L01, D1
+    {PA3,  TIM2, 4}, // R10, A2
+    {PA6,  TIM3, 1}, // R07, A5
+    {PA4,  TIM3, 2}, // R09, A3
+    {PB0,  TIM3, 3}, // L06, D3
+    {PB1,  TIM4, 4}, // L09, D6
+  #endif
   #ifdef F401RE
     {PA8,  TIM1, 1}, //D7 
     {PA9,  TIM1, 2}, //D8
