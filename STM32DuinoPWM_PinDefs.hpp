@@ -53,22 +53,22 @@ static const PinTimerMap timerPinChannels[] = {
     {PB9,  TIM4, 4}, //D14
   #endif
   #ifdef G0B1RE
-    {PA8,  TIM1, 1}, //
-    {PA9,  TIM1, 2}, //
-    {PA10, TIM1, 3}, //
-    {PC11, TIM1, 4}, // 
-    {PA0,  TIM2, 1}, //
-    {PA1,  TIM2, 2}, //
-    {PB10, TIM2, 3}, //
-    {PB11, TIM2, 4}, //
-    {PA6,  TIM3, 1}, //
-    {PA7,  TIM3, 2}, //
-    {PB0,  TIM3, 3}, //
-    {PB1,  TIM3, 4}, //
-    {PB6,  TIM4, 1}, //
-    {PB7,  TIM4, 2}, //
-    {PB8,  TIM4, 3}, //
-    {PB9,  TIM4, 4}, //
+    {PA8,  TIM1, 1}, // R23, D7
+    {PA9,  TIM1, 2}, // R21, D8
+    {PA10, TIM1, 3}, // R33, D2
+    {PC11, TIM1, 4}, // L02
+    {PA0,  TIM2, 1}, // L28, A0
+    {PA1,  TIM2, 2}, // L30, A1
+    {PB10, TIM2, 3}, // R28
+    {PB11, TIM2, 4}, // L36, A4
+    {PA6,  TIM3, 1}, // R13, D12
+    {PA7,  TIM3, 2}, // R15, D11
+    {PB0,  TIM3, 3}, // R17, D10
+    {PB1,  TIM3, 4}, // L34, A3
+    {PB6,  TIM4, 1}, // R24
+    {PB7,  TIM4, 2}, // L21
+    {PB8,  TIM4, 3}, // L38, A5 - shared with PB12
+    {PB9,  TIM4, 4}, // L36, A4 - shared with PB11
   #endif
   #ifdef G474RE
     {PC0,  TIM1, 1}, // L38, A5
@@ -89,36 +89,36 @@ static const PinTimerMap timerPinChannels[] = {
     {PB9,  TIM4, 4}, // R05, D14
   #endif
   #ifdef H753ZI
-    {PE9,  TIM1, 1}, //
-    {PE11, TIM1, 2}, //
-    {PE13, TIM1, 3}, //
-    {PE14, TIM1, 4}, //
-    {PA5,  TIM2, 1}, //
-    {PB3,  TIM2, 2}, //
-    {PB10, TIM2, 3}, //
-    {PB11, TIM2, 4}, //
-    {PA6,  TIM3, 1}, //
+    {PE9,  TIM1, 1}, // LL15, D71
+    {PE11, TIM1, 2}, // RL06, D5
+    {PE13, TIM1, 3}, // RL10, D3
+    {PE14, TIM1, 4}, // RL08, D4
+    {PA5,  TIM2, 1}, // RU10, D13
+    {PB3,  TIM2, 2}, // RU15, D23
+    {PB10, TIM2, 3}, // RL32, D36
+    {PB11, TIM2, 4}, // RL34, D35
+    {PA6,  TIM3, 1}, // RU12, D12
     {PA7,  TIM3, 2}, //
-    {PC8,  TIM3, 3}, //
-    {PB1,  TIM3, 4}, //
-    {PD12, TIM4, 1}, //
-    {PD13, TIM4, 2}, //
-    {PD14, TIM4, 3}, //
-    {PD15, TIM4, 4}, //
-    {PA0,  TIM5, 1}, //
-    {PA1,  TIM5, 2}, //
+    {PC8,  TIM3, 3}, // LU02, D43
+    {PB1,  TIM3, 4}, // LL07, A3
+    {PD12, TIM4, 1}, // RL21, D29
+    {PD13, TIM4, 2}, // RL19, D28
+    {PD14, TIM4, 3}, // RU16, D10 
+    {PD15, TIM4, 4}, // RU18, D9
+    {PA0,  TIM5, 1}, // RL29, D32
+    {PA1,  TIM5, 2}, //  
     {PA2,  TIM5, 3}, //
-    {PA3,  TIM5, 4}, //
+    {PA3,  TIM5, 4}, // LL01, A0
 
   #endif
   #if defined(L412KB) || defined(L432KC)
-    {PA8,  TIM1, 1}, //
-    {PA9,  TIM1, 2}, //
-    {PA10, TIM1, 3}, //
-    {PA11, TIM1, 4}, //
-    {PA5,  TIM2, 1}, //
-    {PA1,  TIM2, 2}, //
-    {PA3,  TIM2, 4}, //
+    {PA8,  TIM1, 1}, // L12, D9
+    {PA9,  TIM1, 2}, // L01, D1
+    {PA10, TIM1, 3}, // L02, D0
+    {PA11, TIM1, 4}, // L13, D10
+    {PA5,  TIM2, 1}, // R08, A4
+    {PA1,  TIM2, 2}, // R11, A1
+    {PA3,  TIM2, 4}, // R10, A3
   #endif 
 };
 #endif // !_STM32DUINOPWMPINDEFH
