@@ -3,31 +3,31 @@
 #include "HardwareTimer.h"
 #include <Arduino.h>
 
-#ifdef F303K8
+#ifdef ARDUINO_NUCLEO_F303K8
 #include "stm32f303xx.h"
 #endif 
 
-#ifdef F401RE
+#ifdef ARDUINO_NUCLEO_F401RE
 #include "stm32f401xx.h"
 #endif 
 
-#ifdef G0B1RE
+#ifdef ARDUINO_NUCLEO_G0B1RE
 #include "stm32g0b1xx.h"
 #endif 
 
-#ifdef G474RE
+#ifdef ARDUINO_NUCLEO_G474RE
 #include "stm32g474xx.h"
 #endif
 
-#ifdef H753ZI
+#ifdef ARDUINO_NUCLEO_H753ZI
 #include "stm32h753xx.h"
 #endif
 
-#ifdef L412KB
+#ifdef ARDUINO_NUCLEO_L412KB
 #include "stm32l412xx.h"
 #endif 
 
-#ifdef L432KC
+#ifdef ARDUINO_NUCLEO_L432KC
 #include "stm32l432xx.h"
 #endif
 
@@ -39,7 +39,7 @@ struct PinTimerMap {
 };
 
 static const PinTimerMap timerPinChannels[] = {
-  #ifdef F303K8
+  #ifdef ARDUINO_NUCLEO_F303K8
     {PA8,  TIM1, 1}, // L12, D9
     {PA10, TIM1, 3}, // L02, D0
     {PA11, TIM1, 4}, // L13, D10
@@ -52,7 +52,7 @@ static const PinTimerMap timerPinChannels[] = {
     {PB0,  TIM3, 3}, // L06, D3
     {PB1,  TIM4, 4}, // L09, D6
   #endif
-  #ifdef F401RE
+  #ifdef ARDUINO_NUCLEO_F401RE
     {PA8,  TIM1, 1}, //D7 
     {PA9,  TIM1, 2}, //D8
     {PA10, TIM1, 3}, //D2
@@ -69,7 +69,7 @@ static const PinTimerMap timerPinChannels[] = {
     {PB8,  TIM4, 3}, //D15
     {PB9,  TIM4, 4}, //D14
   #endif
-  #ifdef G0B1RE
+  #ifdef ARDUINO_NUCLEO_G0B1RE
     {PA8,  TIM1, 1}, // R23, D7
     {PA9,  TIM1, 2}, // R21, D8
     {PA10, TIM1, 3}, // R33, D2
@@ -87,7 +87,7 @@ static const PinTimerMap timerPinChannels[] = {
     {PB8,  TIM4, 3}, // L38, A5 - shared with PB12
     {PB9,  TIM4, 4}, // L36, A4 - shared with PB11
   #endif
-  #ifdef G474RE
+  #ifdef ARDUINO_NUCLEO_G474RE
     {PC0,  TIM1, 1}, // L38, A5
     {PC1,  TIM1, 2}, // L36, A4
     {PC2,  TIM1, 3}, // L35
@@ -105,7 +105,7 @@ static const PinTimerMap timerPinChannels[] = {
     {PB8,  TIM4, 3}, // R03, D15
     {PB9,  TIM4, 4}, // R05, D14
   #endif
-  #ifdef H753ZI
+  #ifdef ARDUINO_NUCLEO_H753ZI
     {PE9,  TIM1, 1}, // LL15, D71
     {PE11, TIM1, 2}, // RL06, D5
     {PE13, TIM1, 3}, // RL10, D3
@@ -128,7 +128,7 @@ static const PinTimerMap timerPinChannels[] = {
     {PA3,  TIM5, 4}, // LL01, A0
 
   #endif
-  #if defined(L412KB) || defined(L432KC)
+  #if defined(ARDUINO_NUCLEO_L412KB) || defined(ARDUINO_NUCLEO_L432KC)
     {PA8,  TIM1, 1}, // L12, D9
     {PA9,  TIM1, 2}, // L01, D1
     {PA10, TIM1, 3}, // L02, D0
